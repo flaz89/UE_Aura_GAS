@@ -4,9 +4,11 @@ DerivedDataCache/
 Intermediate/
 Saved/
 Build/
+Plugins/
 
 .vscode/
 .idea/
 *.log
 .DS_Store
+
 
