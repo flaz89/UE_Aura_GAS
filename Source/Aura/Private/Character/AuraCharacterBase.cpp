@@ -16,6 +16,22 @@ AAuraCharacterBase::AAuraCharacterBase()
 	Weapon->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
 }
 
+/* GET ABILITY SYSTEM COMPONENT
+ * Step.2 - return AbilitySystemComponent declared in .h
+ */
+UAbilitySystemComponent* AAuraCharacterBase::GetAbilitySystemComponent() const
+{
+	return AbilitySystemComponent;
+}
+
+/* GET ATTRIBUTE SET
+ * Step.3 - return AttributeSet declared in .h
+ */
+UAttributeSet* AAuraCharacterBase::GetAttributeSet() const
+{
+	return AttributeSet;
+}
+
 void AAuraCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();

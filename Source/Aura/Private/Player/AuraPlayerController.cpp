@@ -5,7 +5,6 @@
 
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "Character/AuraCharacter.h"
 #include "Interaction/EnemyInterface.h"
 
 /*
