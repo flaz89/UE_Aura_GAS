@@ -6,6 +6,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Character/AuraCharacter.h"
+#include "Interaction/EnemyInterface.h"
 
 /*
  * Step 1 - ensure replication for this class
@@ -13,6 +14,17 @@
 AAuraPlayerController::AAuraPlayerController()
 {
 	bReplicates = true;
+}
+
+/* PLAYER TICK()
+ * Step 13 - declare inherited function PlayerTick()
+ * Step ??????? - call CursorTrace() function
+ */
+void AAuraPlayerController::PlayerTick(float DeltaTime)
+{
+	Super::PlayerTick(DeltaTime);
+	
+	CursorTrace();
 }
 
 /* BEGIN PLAY()
@@ -59,7 +71,6 @@ void AAuraPlayerController::SetupInputComponent()
  * Step 10 - use the forward vector as te axis from the camera to the character and the right vector as well 
  * Step 11 - check if controlled pawn exist
  * Step 12 - call AddMovementInput() on pawn passing axis direction and input value
- * 
  */
 void AAuraPlayerController::Move(const ::FInputActionValue& InputActionValue)
 {
@@ -73,5 +84,50 @@ void AAuraPlayerController::Move(const ::FInputActionValue& InputActionValue)
 	{
 		ControlledPawn->AddMovementInput(ForwardDirection, InputAxesVector.Y);
 		ControlledPawn->AddMovementInput(RightDirection, InputAxesVector.X);
+	}
+}
+
+/* CURSOR TRACE()
+ * Step 14 - declare Cursor Trace function
+ * Step 15 - create structure FHitResult needed to define the affected actor under the mouse cursor
+ * Step 16 - call playercontroller function GetHitResultUnderCursor() 
+ 			 to obtain the actor under mouse cursor and check if it's a blocking actor
+ * Step 17 - add 2 pointer interface to cache the hitresult each frame 
+ 			 and "this" actor (current actor) is updated and gonna update "last Actor" next frame
+ * Step 18 - implement cases scenario about LastActor & ThisActor
+ 			 1. LastActor == nullptr && ThisActor == nullptr
+ 			 2. LastActor == nullptr && ThisActor
+ 			 3. LastActor && ThisActor == nullptr
+ 			 4. LastActor && ThisActor && LastActor!= ThisActor
+ 			 5. LastActor && ThisActor && LastActor== ThisActor
+ *
+ */
+void AAuraPlayerController::CursorTrace()
+{
+	FHitResult CursorHit;
+	GetHitResultUnderCursor(ECC_Visibility, false, CursorHit);
+	if (!CursorHit.bBlockingHit) return;
+	
+	LastActor = ThisActor;
+	ThisActor = CursorHit.GetActor();
+	
+	if (LastActor == nullptr)
+	{
+		if (ThisActor != nullptr) ThisActor->HighlightActor();
+	} 
+	else
+	{
+		if (ThisActor == nullptr)
+		{
+			LastActor->UnHighlightActor();
+		}
+		else
+		{
+			if (LastActor != ThisActor)
+			{
+				LastActor->UnHighlightActor();
+				ThisActor->HighlightActor();
+			} 
+		}
 	}
 }
