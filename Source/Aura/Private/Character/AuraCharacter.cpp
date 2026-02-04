@@ -3,9 +3,12 @@
 
 #include "Character/AuraCharacter.h"
 
+#include "AbilitySystemComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Player/AuraPlayerState.h"
 
 /* CONSTRUCTOR
  * Step 1 - Setup SpringArm component
@@ -37,6 +40,43 @@ AAuraCharacter::AAuraCharacter()
 	Camera = CreateDefaultSubobject<UCameraComponent>("Camera");
 	Camera->bUsePawnControlRotation = false;
 	Camera->SetupAttachment(SpringArmComponent);
+}
+
+/* POSSESSED BY()
+ * is called on server when player controller is ready
+ * Step.9 - initialize ASC Actor Info
+ */
+void AAuraCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
 	
+	InitAbilityActorInfo();
+}
+
+/* ONREP_PLAYERSTATE()
+ * is called on client after player controller is ready on server
+ * Step.10 - initialize ASC Actor Info
+ */
+void AAuraCharacter::OnRep_PlayerState()
+{
+	Super::OnRep_PlayerState();
 	
+	InitAbilityActorInfo();
+}
+
+/* POSSESSED BY()
+ * In this case used to initialize AbilitySystemComponent with actor info on the Server 
+ * Step.5 - get PlayerState from character and check it
+ * Step.6 - assign AuraPlayerState ASC to ASC of this class (AbilitySystemComponent)
+ * Step.7 - assign AuraPlayerState AS to AS of this class (AttributeSet)
+ * Step.8 - Initialize AbilitySystemComponent with actor info function "InitAbilityActorInfo(owner, avatar)"
+ */
+void AAuraCharacter::InitAbilityActorInfo()
+{
+	AAuraPlayerState* AuraPlayerState =  GetPlayerState<AAuraPlayerState>();
+	check(AuraPlayerState);
+	
+	AbilitySystemComponent = AuraPlayerState->GetAbilitySystemComponent();
+	AttributeSet = AuraPlayerState->GetAttributeSet();
+	AbilitySystemComponent->InitAbilityActorInfo(AuraPlayerState, this);
 }

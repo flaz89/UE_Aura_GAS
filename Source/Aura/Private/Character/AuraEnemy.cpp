@@ -24,6 +24,18 @@ AAuraEnemy::AAuraEnemy()
 	AttributeSet = CreateDefaultSubobject<UAuraAttributeSet>("AttributeSet");
 }
 
+
+/* BEGIN PLAY()
+ * Step.8 - Initialize AbilitySystemComponent with actor info function "InitAbilityActorInfo(owner, avatar)"
+ */
+void AAuraEnemy::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	check(AbilitySystemComponent);
+	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+}
+
 /* HIGHLIGHT ACTOR
  * Step.1 - Get Skeletal-mesh and enable RenderCustomDepth and set the custom stencil pass value
  * Step.2 - Get Weapon and enable RenderCustomDepth and set the custom stencil pass value
