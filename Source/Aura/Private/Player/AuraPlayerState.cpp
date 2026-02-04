@@ -10,11 +10,13 @@
  * Step.1 - call built-in function SetNetUpdateFrequency() to set frequency replication of this class
  * Step.2 - construct AbilitySystemComponent with custom type "UAuraAbilitySystemComponent" and set replicated
  * Step.3 - construct AttributeSet with custom type "UAuraAttributeSet"
+ * Step.6 - set AbilitySystemComponent replication mode to Mixed (cause is for player character) 
  */
 AAuraPlayerState::AAuraPlayerState()
 {
 	AbilitySystemComponent = CreateDefaultSubobject<UAuraAbilitySystemComponent>("AbilitySystemComponent");
 	AbilitySystemComponent->SetIsReplicated(true);
+	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 	
 	AttributeSet = CreateDefaultSubobject<UAuraAttributeSet>("AttributeSet");
 	

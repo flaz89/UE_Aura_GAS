@@ -11,6 +11,7 @@
  * Step.4 - set collision response to block visibility for skeletal-mesh (mouse can trace it)
  * Step.5 - construct AbilitySystemComponent with custom type "UAuraAbilitySystemComponent" and set replicated
  * Step.6 - construct AttributeSet with custom type "UAuraAttributeSet"
+ * Step.7 - set AbilitySystemComponent replication mode to Minimal (cause is AI) 
  */
 AAuraEnemy::AAuraEnemy()
 {
@@ -18,9 +19,9 @@ AAuraEnemy::AAuraEnemy()
 	
 	AbilitySystemComponent = CreateDefaultSubobject<UAuraAbilitySystemComponent>("AbilitySystemComponent");
 	AbilitySystemComponent->SetIsReplicated(true);
+	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 	
 	AttributeSet = CreateDefaultSubobject<UAuraAttributeSet>("AttributeSet");
-	
 }
 
 /* HIGHLIGHT ACTOR
