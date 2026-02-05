@@ -65,7 +65,7 @@ void AAuraCharacter::OnRep_PlayerState()
 }
 
 /* POSSESSED BY()
- * In this case used to initialize AbilitySystemComponent with actor info on the Server 
+ * This function is used to initialize AbilitySystemComponent with actor info on the Server 
  * Step.5 - get PlayerState from character and check it
  * Step.6 - assign AuraPlayerState ASC to ASC of this class (AbilitySystemComponent)
  * Step.7 - assign AuraPlayerState AS to AS of this class (AttributeSet)

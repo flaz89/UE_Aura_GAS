@@ -53,7 +53,7 @@ void UAuraAttributeSet::OnRep_MaxMana(const FGameplayAttributeData& OldMaxMana) 
 }
 
 /* GET LIFETIME REPLICATION PROPS()
- * used to determine the place where we register variables for replication
+ * called after AttributeSet construction, used to determine the place where we register variables for replication
  * Step.2 - register attribute "Health" with DOREPLIFETIME macro (class, attribute, condition, replication mode)
  * Step.3 - register attribute "MaxHealth" with DOREPLIFETIME macro (class, attribute, condition, replication mode)
  * Step.4 - register attribute "Mana" with DOREPLIFETIME macro (class, attribute, condition, replication mode)
