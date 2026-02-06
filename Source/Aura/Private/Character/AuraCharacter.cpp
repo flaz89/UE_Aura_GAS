@@ -8,7 +8,9 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Player/AuraPlayerController.h"
 #include "Player/AuraPlayerState.h"
+#include "UI/HUD/AuraHUD.h"
 
 /* CONSTRUCTOR
  * Step 1 - Setup SpringArm component
@@ -79,4 +81,12 @@ void AAuraCharacter::InitAbilityActorInfo()
 	AbilitySystemComponent = AuraPlayerState->GetAbilitySystemComponent();
 	AttributeSet = AuraPlayerState->GetAttributeSet();
 	AbilitySystemComponent->InitAbilityActorInfo(AuraPlayerState, this);
+	
+	if (AAuraPlayerController* PlayerController = Cast<AAuraPlayerController>(GetController()))
+	{
+		if (AAuraHUD* HUD = Cast<AAuraHUD>(PlayerController -> GetHUD()))
+		{
+			HUD ->InitOverlay(PlayerController, AuraPlayerState, AbilitySystemComponent, AttributeSet );
+		}
+	}
 }
