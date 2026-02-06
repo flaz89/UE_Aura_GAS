@@ -11,5 +11,5 @@
 void UAuraUserWidget::SetWidgetController(UObject* InWidgetController)
 {
 	WidgetController = InWidgetController;
-	WidgetControllerSet(); // the moment we call this function we know the WidgetController exist
+	WidgetControllerSet(); // the moment we call this function we know the WidgetController has been set
 }
