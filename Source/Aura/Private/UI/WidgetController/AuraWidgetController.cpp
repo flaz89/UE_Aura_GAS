@@ -13,3 +13,11 @@ void UAuraWidgetController::SetWidgetControllerParams(const FWidgetControllerPar
 	AbilitySystemComponent = WCParams.AbilitySystemComponent;
 	AttributeSet = WCParams.AttributeSet;
 }
+
+/* BROADCAST INITIAL VALUES()
+ * function overrided from child class, used to init the values in widgets (View)
+ */
+void UAuraWidgetController::BroadcastInitialValues()
+{
+	
+}

@@ -72,6 +72,9 @@ void AAuraCharacter::OnRep_PlayerState()
  * Step.6 - assign AuraPlayerState ASC to ASC of this class (AbilitySystemComponent)
  * Step.7 - assign AuraPlayerState AS to AS of this class (AttributeSet)
  * Step.8 - Initialize AbilitySystemComponent with actor info function "InitAbilityActorInfo(owner, avatar)"
+ * Step.9 - get and initialize a local player controller with "AAuraPlayerController" type  and check it
+ * Step.10 - get and initialize a local HUD with "AAuraHUD" type  and check it
+ * Step.11 - initialize widgetController with InitOverlay() function on HUD
  */
 void AAuraCharacter::InitAbilityActorInfo()
 {
@@ -86,7 +89,7 @@ void AAuraCharacter::InitAbilityActorInfo()
 	{
 		if (AAuraHUD* HUD = Cast<AAuraHUD>(PlayerController -> GetHUD()))
 		{
-			HUD ->InitOverlay(PlayerController, AuraPlayerState, AbilitySystemComponent, AttributeSet );
+			HUD->InitOverlay(PlayerController, AuraPlayerState, AbilitySystemComponent, AttributeSet );
 		}
 	}
 }

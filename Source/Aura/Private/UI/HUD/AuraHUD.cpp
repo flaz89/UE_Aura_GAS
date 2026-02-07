@@ -27,11 +27,12 @@ UOverlayWidgetController* AAuraHUD::GetOverlayWidgetController(const FWidgetCont
  * Step.3 - check if "OverlayWidgetClass" member exists (View)
  * Step.4 - check if "OverlayWidgetControllerClass" member exists (Controller)
  * Step.5 - create generic UUserWidget widget
- * Step.6 - assign cast widget to "OverlayWidget" memeber
+ * Step.6 - assign cast widget to "OverlayWidget" member
  * Step.7 - define "WidgetControllerParams" struct with arguments passed by
  * Step.8 - assign the function return "GetOverlayWidgetController()" to a local pointer "WidgetController"
  * Step.9 - use member function "SetWidgetController()" of member "OverlayWidget" to set the proper controller
- * Step.10 - add created widget to viewport
+ * Step.10 - add OverlayWidget to viewport
+ * Step.11 - call BroadcastInitialValues on widget controller
  */
 void AAuraHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS)
 {
@@ -45,6 +46,7 @@ void AAuraHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySyst
 	UOverlayWidgetController* WidgetController = GetOverlayWidgetController(WidgetControllerParams);
 	
 	OverlayWidget->SetWidgetController(WidgetController);
+	WidgetController->BroadcastInitialValues();
 	
-	Widget->AddToViewport();
+	OverlayWidget->AddToViewport();
 }
