@@ -7,7 +7,6 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "Kismet/GameplayStatics.h"
 #include "Player/AuraPlayerController.h"
 #include "Player/AuraPlayerState.h"
 #include "UI/HUD/AuraHUD.h"
@@ -66,7 +65,7 @@ void AAuraCharacter::OnRep_PlayerState()
 	InitAbilityActorInfo();
 }
 
-/* POSSESSED BY()
+/* INIT ABILITY ACTOR INFO()
  * This function is used to initialize AbilitySystemComponent with actor info on the Server 
  * Step.5 - get PlayerState from character and check it
  * Step.6 - assign AuraPlayerState ASC to ASC of this class (AbilitySystemComponent)

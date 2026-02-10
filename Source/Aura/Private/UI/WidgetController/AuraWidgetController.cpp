@@ -21,3 +21,10 @@ void UAuraWidgetController::BroadcastInitialValues()
 {
 	
 }
+
+/* BIND CLLBACKS TO DEPENDENCIES()
+ * function overrided from child class, used to bind callback functions to all dependencies (Controller)
+ */
+void UAuraWidgetController::BindCallbacksToDependencies()
+{
+}

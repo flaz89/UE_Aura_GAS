@@ -40,8 +40,10 @@ void AAuraEffectActor::BeginPlay()
  * Step.4 - define function
  * Step.8 - verify if OtherActor implement IAbilitySystemInterface
  * Step.9 - obtain AuraAttributeSet reference from ASC of OtherActor implementing interface
- * Step.10 - use const_cast just to test and remove the constness from AuraAttributeSet and change its attribute
- * Step.11 - Destroy actor at the end of the process
+ * Step.10 - use const_cast just to test and remove the constness from AuraAttributeSet
+ * Step.11 - change Health attribute
+ * Step.12 - Destroy actor at the end of the process
+ * Step.13 - change Mana attribute
  */
 void AAuraEffectActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -52,6 +54,7 @@ void AAuraEffectActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 		const UAuraAttributeSet* AuraAttributeSet = Cast<UAuraAttributeSet>(ASCInterface->GetAbilitySystemComponent()->GetAttributeSet(UAuraAttributeSet::StaticClass()));
 		UAuraAttributeSet* MutableAuraAttributeSet= const_cast<UAuraAttributeSet*>(AuraAttributeSet);
 		MutableAuraAttributeSet->SetHealth(AuraAttributeSet->GetHealth() + 25.f);
+		MutableAuraAttributeSet->SetMana(AuraAttributeSet->GetMana() - 25.f);
 		Destroy();
 	}
 }

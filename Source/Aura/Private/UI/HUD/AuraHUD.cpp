@@ -10,6 +10,7 @@
 /* GET OVERLAY WIDGET CONTROLLER()
  *  Step.1 - check if "OverlayWidgetController" member exists or not, if not create new instance one
  *  Step.2 - Set params structure on "OverlayWidgetController" instance and then return it
+ *  Step.12 - Call the delegate function on WidgetController that binds callbacks functions on values change
  */
 UOverlayWidgetController* AAuraHUD::GetOverlayWidgetController(const FWidgetControllerParams& WCParams)
 {
@@ -17,6 +18,7 @@ UOverlayWidgetController* AAuraHUD::GetOverlayWidgetController(const FWidgetCont
 	{
 		OverlayWidgetController = NewObject<UOverlayWidgetController>(this, OverlayWidgetControllerClass);
 		OverlayWidgetController->SetWidgetControllerParams(WCParams);
+		OverlayWidgetController->BindCallbacksToDependencies();
 		
 		return OverlayWidgetController;
 	}
