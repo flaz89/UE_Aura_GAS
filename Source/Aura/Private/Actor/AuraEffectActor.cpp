@@ -48,12 +48,12 @@ void AAuraEffectActor::BeginPlay()
  * Step.23 - create a structure FGameplayEffectSpecHandle (wrapper) and store value from MakeOutgoingSpec() function
  * Step.24 - call ApplyGameEffectSpecToSelf() on ASC obtained from taget passing in the dereferenced data from EffectSpectHandle
  */
-void AAuraEffectActor::ApplyEffectToTarget(AActor* Target, TSubclassOf<UGameplayEffect> GameplayEffectClass)
+void AAuraEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> GameplayEffectClass)
 {
-	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Target);
+	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
 	if (TargetASC == nullptr) return;
 	
-	check(GameplayEffectClass == nullptr)
+	check(GameplayEffectClass)
 	
 	FGameplayEffectContextHandle EffectContextHandle = TargetASC->MakeEffectContext();
 	EffectContextHandle.AddSourceObject(this);
