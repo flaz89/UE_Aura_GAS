@@ -6,7 +6,7 @@
 #include "Net/UnrealNetwork.h"
 
 /* CONSTRUCTOR()
- * 
+ * Step.5 - use ACCESSOR Init to initialize GameplayAttribute data declared in .h
  */
 UAuraAttributeSet::UAuraAttributeSet()
 {
@@ -19,7 +19,7 @@ UAuraAttributeSet::UAuraAttributeSet()
 
 /* ONREP_HEALTH()
  * callback function called when attribute "Health" get changes
- * Step.1 - call "gameplayAttrinute" macro to inform AbilitySystem about attribute replication
+ * Step.1 - call "gameplayAttribute" macro to inform AbilitySystem about attribute replication
  */
 void UAuraAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth) const
 {
@@ -28,7 +28,7 @@ void UAuraAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth) co
 
 /* ONREP_MAXHEALTH()
  * callback function called when attribute "MaxHealth" get changes
- * Step.3 - call "gameplayAttrinute" macro to inform AbilitySystem about attribute replication
+ * Step.2 - call "gameplayAttribute" macro to inform AbilitySystem about attribute replication
  */
 void UAuraAttributeSet::OnRep_MaxHealth(const FGameplayAttributeData& OldMaxHealth) const
 {
@@ -37,7 +37,7 @@ void UAuraAttributeSet::OnRep_MaxHealth(const FGameplayAttributeData& OldMaxHeal
 
 /* ONREP_MANA()
  * callback function called when attribute "Mana" get changes
- * Step.4 - call "gameplayAttrinute" macro to inform AbilitySystem about attribute replication
+ * Step.3 - call "gameplayAttribute" macro to inform AbilitySystem about attribute replication
  */
 void UAuraAttributeSet::OnRep_Mana(const FGameplayAttributeData& OldMana) const
 {
@@ -46,7 +46,7 @@ void UAuraAttributeSet::OnRep_Mana(const FGameplayAttributeData& OldMana) const
 
 /* ONREP_MAXMANA()
  * callback function called when attribute "MaxMana" get changes
- * Step.4 - call "gameplayAttrinute" macro to inform AbilitySystem about attribute replication
+ * Step.4 - call "gameplayAttribute" macro to inform AbilitySystem about attribute replication
  */
 void UAuraAttributeSet::OnRep_MaxMana(const FGameplayAttributeData& OldMaxMana) const
 {
@@ -55,10 +55,10 @@ void UAuraAttributeSet::OnRep_MaxMana(const FGameplayAttributeData& OldMaxMana) 
 
 /* GET LIFETIME REPLICATION PROPS()
  * called after AttributeSet construction, used to determine the place where we register variables for replication
- * Step.2 - register attribute "Health" with DOREPLIFETIME macro (class, attribute, condition, replication mode)
- * Step.3 - register attribute "MaxHealth" with DOREPLIFETIME macro (class, attribute, condition, replication mode)
- * Step.4 - register attribute "Mana" with DOREPLIFETIME macro (class, attribute, condition, replication mode)
- * Step.5 - register attribute "MaxMana" with DOREPLIFETIME macro (class, attribute, condition, replication mode)
+ * Step.6 - register attribute "Health" with DOREPLIFETIME macro (class, attribute, condition, replication mode)
+ * Step.7 - register attribute "MaxHealth" with DOREPLIFETIME macro (class, attribute, condition, replication mode)
+ * Step.8 - register attribute "Mana" with DOREPLIFETIME macro (class, attribute, condition, replication mode)
+ * Step.9 - register attribute "MaxMana" with DOREPLIFETIME macro (class, attribute, condition, replication mode)
  */
 void UAuraAttributeSet::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
 {
