@@ -47,6 +47,10 @@ void AAuraEffectActor::BeginPlay()
  * Step.22 - register this object to EffectContextHandle creating a context object
  * Step.23 - create a structure FGameplayEffectSpecHandle (wrapper) and store value from MakeOutgoingSpec() function
  * Step.24 - call ApplyGameEffectSpecToSelf() on ASC obtained from taget passing in the dereferenced data from EffectSpectHandle
+ * Step.29 - create a bool variable bIsInfinite extracting and comparing the policy duration value of GameplayEffect from the EffectSpecHandle
+ * Step.30 - store the return of function ApplyGameplayEffectSpecToSelf in a variable 
+ * Step.31 - check if duration policy is infinite and if the removal policy of GameplayEffect removal policy enum is set to RemoveOnEndOverlap
+ * Step.32 - if true add to ActiveEffectHandles map the active effect and Target ability system component
  */
 void AAuraEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> GameplayEffectClass)
 {
@@ -58,7 +62,88 @@ void AAuraEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGam
 	FGameplayEffectContextHandle EffectContextHandle = TargetASC->MakeEffectContext();
 	EffectContextHandle.AddSourceObject(this);
 	const FGameplayEffectSpecHandle EffectSpecHandle = TargetASC->MakeOutgoingSpec(GameplayEffectClass, 1.f, EffectContextHandle);
-	TargetASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
+	const FActiveGameplayEffectHandle ActiveEffectHandle = TargetASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
+	
+	const bool bIsInfinite = EffectSpecHandle.Data.Get()->Def.Get()->DurationPolicy == EGameplayEffectDurationType::Infinite;
+	if (bIsInfinite && InfiniteEffectRemovalPolicy == EEffectRemovalPolicy::RemoveOnEndOverlap)
+	{
+		ActiveEffectHandles.Add(ActiveEffectHandle, TargetASC);
+	}
+}
+
+/* ON OVERLAP
+ * Step.25 - if InstantEffectApplicationPolicy is set to "OnOverlap" call the function ApplyEffectToTarget 
+			 passing target actor and InstantGameplayEffect class stored in .h
+ * Step.27 - if DurationEffectApplicationPolicy is set to "OnOverlap" call the function ApplyEffectToTarget 
+			 passing target actor and DurationGameplayEffect class stored in .h
+ * Step.33 - if InfiniteEffectApplicationPolicy is set to "OnOverlap" call the function ApplyEffectToTarget 
+			 passing target actor and InfiniteGameplayEffect class stored in .h
+ */
+void AAuraEffectActor::OnOverlap(AActor* TargetActor)
+{
+	if (InstantEffectApplicationPolicy == EEffectApplicationPolicy::ApplyOnOverlap)
+	{
+		ApplyEffectToTarget(TargetActor, InstantGameplayEffectClass);
+	}
+	if (DurationEffectApplicationPolicy == EEffectApplicationPolicy::ApplyOnOverlap)
+	{
+		ApplyEffectToTarget(TargetActor, DurationGameplayEffectClass);
+	}
+	if (InfiniteEffectApplicationPolicy == EEffectApplicationPolicy::ApplyOnOverlap)
+	{
+		ApplyEffectToTarget(TargetActor, InfiniteGameplayEffectClass);
+	}
+}
+
+/* ON END OVERLAP
+ * Step.26 - if InstantEffectRemovalPolicy is set to "OnEndOverlap" call the function ApplyEffectToTarget 
+			 passing target actor and InstantGameplayEffect stored in .h
+ * Step.28 - if DurationEffectRemovalPolicy is set to "OnEndOverlap" call the function ApplyEffectToTarget 
+			 passing target actor and DurationGameplayEffect class stored in .h
+ * Step.34 - if InfiniteEffectApplicationPolicy is set to "OnEndOverlap" call the function ApplyEffectToTarget 
+			 passing target actor and InfiniteGameplayEffect class stored in .h	
+ * Step.35 - if InfiniteEffectApplicationPolicy is set to "OnOverlap" call the function ApplyEffectToTarget 
+			 passing target actor and InfiniteGameplayEffect class stored in .h
+ * Step.36 - if InfiniteEffectRemovalPolicy is set to "OnEndOverlap" first of all obtain the Target Ability System Component and check if is valid	
+ * Step.37 - loop on map and check for each pair if the value is == to target Ability System Component, if so remove the ActiveGameplayEffect using the key of the pair
+ * Step.38 - create an array that handles all the ActiveGameplayEffect selected to remove
+ * Step.39 - looping through each pair, after removing the ActiveGameplayEffect on Ability System Component, ad that ActiveGameplayEffect to the new array
+ * Step.40 - looping through the array contains all ActiveGameplayEffect to remove and for each effect remove in the map that pair with the key containing it
+ */
+void AAuraEffectActor::OnEndOverlap(AActor* TargetActor)
+{
+	if (InstantEffectApplicationPolicy == EEffectApplicationPolicy::ApplyOnEndOverlap)
+	{
+		ApplyEffectToTarget(TargetActor, InstantGameplayEffectClass);
+	}
+	if (DurationEffectApplicationPolicy == EEffectApplicationPolicy::ApplyOnEndOverlap)
+	{
+		ApplyEffectToTarget(TargetActor, DurationGameplayEffectClass);
+	}
+	if (InfiniteEffectApplicationPolicy == EEffectApplicationPolicy::ApplyOnEndOverlap)
+	{
+		ApplyEffectToTarget(TargetActor, InfiniteGameplayEffectClass);
+	}
+	if (InfiniteEffectRemovalPolicy == EEffectRemovalPolicy::RemoveOnEndOverlap)
+	{
+		UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
+		if (!IsValid(TargetASC)) return;
+		
+		TArray<FActiveGameplayEffectHandle> HandlesToRemove; 
+		for (const auto HandlePair : ActiveEffectHandles)
+		{
+			if (HandlePair.Value == TargetASC)
+			{
+				TargetASC->RemoveActiveGameplayEffect(HandlePair.Key, 1); //stackToRemove = 1 if you want remove just a single effect 
+				HandlesToRemove.Add(HandlePair.Key);
+			}
+		}
+		
+		for (FActiveGameplayEffectHandle& Handle : HandlesToRemove)
+		{
+			ActiveEffectHandles.FindAndRemoveChecked(Handle);
+		}
+	}
 }
 
 /* ON OVERLAP()
