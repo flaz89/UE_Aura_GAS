@@ -2,7 +2,11 @@
 
 
 #include "AbilitySystem/AuraAttributeSet.h"
+
+#include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
+#include "GameplayEffectExtension.h"
+#include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
 
 /* CONSTRUCTOR()
@@ -68,6 +72,81 @@ void UAuraAttributeSet::GetLifetimeReplicatedProps(TArray<class FLifetimePropert
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, MaxHealth, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Mana, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, MaxMana, COND_None, REPNOTIFY_Always);
+}
+
+/* PRE ATTRIBUTE CHANGE()
+ * This function kicked off each time an attribute change and is called just before the change occur (raccomanded just for clamping)
+ * Step.10 - define overridden function from AttributeSet class
+ * Step.11 - we can check if the attribute passed in is == to a specific attribute and clamp the NewValue within 0 and MaxValue
+ */
+void UAuraAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+{
+	Super::PreAttributeChange(Attribute, NewValue);
+	
+	if (Attribute == GetHealthAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxHealth());
+	}
+
+	if (Attribute == GetManaAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxMana());
+	}
+}
+
+/* SET EFFECT PROPERTIES()
+ * Step.12 - access to Data and obtain the Gameplay Effect Context and set the value in the struct
+ * Step.13 - obtain the Ability System Component from the source EffectContext and set the value in the struct
+ * Step.14 - check the validity of SourceASC, the GameplayAbilityActorInfo struct of the owner (ActorInfo) and the Actor cached in avatar and set the value in the struct
+ * Step.15 - store the Avatar Actor as SourceActor and the Avatar PlayerController as SourceController and set the value in the struct
+ * Step.16 - check the case if SourceController is null and SourceActor exists, we can get the controller directly from the pawn father of the actor and set the value in the struct
+ * Step.17 - if SourceControl exist we can access and store the possessed character and set the value in the struct
+ * Step.18 - to access TargetActor we have to check if AbilityActor info is valid and if target AvatarActor is valid as well and set the value in the struct
+ * Step.19 - we che access and store the TargetAvatarActor, TargetController, the TargetCharacter and the TargetAbilitySystemComponent and set the value in the struct
+ * 
+ */
+FEffectProperties UAuraAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& Data,
+	FEffectProperties& Props) const
+{
+	Props.EffectContextHandle = Data.EffectSpec.GetContext();
+	Props.SourceASC = Props.EffectContextHandle.GetOriginalInstigatorAbilitySystemComponent();
+	
+	if (IsValid(Props.SourceASC) && Props.SourceASC->AbilityActorInfo.IsValid() && Props.SourceASC->AbilityActorInfo->AvatarActor.IsValid())
+	{
+		Props.SourceAvatarActor = Props.SourceASC->AbilityActorInfo->AvatarActor.Get();
+		Props.SourceController = Props.SourceASC->AbilityActorInfo.Get()->PlayerController.Get();
+		if (Props.SourceController == nullptr && Props.SourceAvatarActor != nullptr)
+		{
+			if (const APawn* Pawn = Cast<APawn>(Props.SourceAvatarActor)) Props.SourceController = Pawn->GetController();
+		}
+		if (Props.SourceController)
+		{
+			Props.SourceCharacter = Cast<ACharacter>(Props.SourceController->GetPawn());
+		}
+	}
+	
+	if (Data.Target.AbilityActorInfo.IsValid() && Data.Target.AbilityActorInfo->AvatarActor.IsValid())
+	{
+		Props.TargetAvatarActor = Data.Target.AbilityActorInfo->AvatarActor.Get();
+		Props.TargetController = Data.Target.AbilityActorInfo->PlayerController.Get();
+		Props.TargetCharacter = Cast<ACharacter>(Props.TargetAvatarActor);
+		Props.TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Props.TargetAvatarActor);
+	}
+	
+	return Props;
+}
+
+/* POST GAMEPLAY EFFECT EXECUTE()
+ * This function is executed after a gameplay effect change attribute
+ * Step.20 - declare a struct FEffectProperties
+ * Step.21 - call the function SetEffectProperties() passing in Data and Props (from here we can access to Source and Target of Effect)
+ */
+void UAuraAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data)
+{
+	Super::PostGameplayEffectExecute(Data);
+	
+	FEffectProperties Props;
+	SetEffectProperties(Data, Props);
 }
 
 
