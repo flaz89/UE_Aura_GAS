@@ -22,7 +22,7 @@ public:
 	virtual void OnRep_PlayerState() override;
 	
 private:
-	void InitAbilityActorInfo();
+	virtual void InitAbilityActorInfo() override;
 	
 	UPROPERTY(EditAnywhere, Category="Camera")
 	TObjectPtr<USpringArmComponent> SpringArmComponent;

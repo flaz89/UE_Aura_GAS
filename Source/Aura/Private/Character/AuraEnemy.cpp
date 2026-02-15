@@ -27,13 +27,30 @@ AAuraEnemy::AAuraEnemy()
 
 /* BEGIN PLAY()
  * Step.8 - Initialize AbilitySystemComponent with actor info function "InitAbilityActorInfo(owner, avatar)"
+ * Step.12 - remove InitAbilityActorInfo() function call by ASC
+ * Step.13 - call overridden InitAbilityActorInfo()
  */
 void AAuraEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	//check(AbilitySystemComponent);
+	//AbilitySystemComponent->InitAbilityActorInfo(this, this);
+	InitAbilityActorInfo();
+}
+
+/* INIT ABILITY ACTOR INFO()
+ * This function is used to initialize AbilitySystemComponent with actor info on the Server 
+ * Step.9 - Declare and define this function
+ * Step.10 - remove Super function
+ * Step.11 - Initialize AbilitySystemComponent with actor info function "InitAbilityActorInfo(owner, avatar)"
+ * Step.14 - Cast the ASC in order to call the class function AbilityActorInfoSet();
+ */
+void AAuraEnemy::InitAbilityActorInfo()
+{
 	check(AbilitySystemComponent);
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
 }
 
 /* HIGHLIGHT ACTOR

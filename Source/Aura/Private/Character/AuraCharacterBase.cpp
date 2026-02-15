@@ -38,3 +38,11 @@ void AAuraCharacterBase::BeginPlay()
 	
 }
 
+/* INIT ABILITY ACTOR INFO()
+ * This function is used to initialize AbilitySystemComponent with actor info on the Server and it's defined in children classes
+ * Step.4 - declare and define function
+ */
+void AAuraCharacterBase::InitAbilityActorInfo()
+{
+}
+

@@ -4,6 +4,7 @@
 #include "Character/AuraCharacter.h"
 
 #include "AbilitySystemComponent.h"
+#include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -45,7 +46,7 @@ AAuraCharacter::AAuraCharacter()
 
 /* POSSESSED BY()
  * is called on server when player controller is ready
- * Step.9 - initialize ASC Actor Info
+ * Step.12 - initialize ASC Actor Info
  */
 void AAuraCharacter::PossessedBy(AController* NewController)
 {
@@ -56,7 +57,7 @@ void AAuraCharacter::PossessedBy(AController* NewController)
 
 /* ONREP_PLAYERSTATE()
  * is called on client after player controller is ready on server
- * Step.10 - initialize ASC Actor Info
+ * Step.13 - initialize ASC Actor Info
  */
 void AAuraCharacter::OnRep_PlayerState()
 {
@@ -74,6 +75,7 @@ void AAuraCharacter::OnRep_PlayerState()
  * Step.9 - get and initialize a local player controller with "AAuraPlayerController" type  and check it
  * Step.10 - get and initialize a local HUD with "AAuraHUD" type  and check it
  * Step.11 - initialize widgetController with InitOverlay() function on HUD
+ * Step.14 - Cast the ASC in order to call the class function AbilityActorInfoSet();
  */
 void AAuraCharacter::InitAbilityActorInfo()
 {
@@ -83,6 +85,7 @@ void AAuraCharacter::InitAbilityActorInfo()
 	AbilitySystemComponent = AuraPlayerState->GetAbilitySystemComponent();
 	AttributeSet = AuraPlayerState->GetAttributeSet();
 	AbilitySystemComponent->InitAbilityActorInfo(AuraPlayerState, this);
+	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
 	
 	if (AAuraPlayerController* PlayerController = Cast<AAuraPlayerController>(GetController()))
 	{
