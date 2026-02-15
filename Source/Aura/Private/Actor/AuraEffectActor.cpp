@@ -51,6 +51,7 @@ void AAuraEffectActor::BeginPlay()
  * Step.30 - store the return of function ApplyGameplayEffectSpecToSelf in a variable 
  * Step.31 - check if duration policy is infinite and if the removal policy of GameplayEffect removal policy enum is set to RemoveOnEndOverlap
  * Step.32 - if true add to ActiveEffectHandles map the active effect and Target ability system component
+ * Step.41 - Add ActorLevel variable to MakeOutgoingSpec() function
  */
 void AAuraEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> GameplayEffectClass)
 {
@@ -61,7 +62,7 @@ void AAuraEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGam
 	
 	FGameplayEffectContextHandle EffectContextHandle = TargetASC->MakeEffectContext();
 	EffectContextHandle.AddSourceObject(this);
-	const FGameplayEffectSpecHandle EffectSpecHandle = TargetASC->MakeOutgoingSpec(GameplayEffectClass, 1.f, EffectContextHandle);
+	const FGameplayEffectSpecHandle EffectSpecHandle = TargetASC->MakeOutgoingSpec(GameplayEffectClass, ActorLevel, EffectContextHandle);
 	const FActiveGameplayEffectHandle ActiveEffectHandle = TargetASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
 	
 	const bool bIsInfinite = EffectSpecHandle.Data.Get()->Def.Get()->DurationPolicy == EGameplayEffectDurationType::Infinite;
