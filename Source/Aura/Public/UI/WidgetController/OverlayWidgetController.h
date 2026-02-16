@@ -67,6 +67,22 @@ protected:
 	void ManaChanged(const FOnAttributeChangeData& Data) const;
 	void MaxManaChanged(const FOnAttributeChangeData& Data) const;
 	
+	template<typename T>
+	T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Widget Data")
 	TObjectPtr<UDataTable> MessageWidgetDataTable;
 };
+
+/* GET DATA TABLE ROW BY TAG()
+ * This is a template function used to return information about a specific tag
+ * Step.22 - declare and implement this template function
+ * Step.23 - use the DataTable passed in to find the row containing the tag name and store in a local variable
+ * Step.24 - return the data table row stored 
+ */
+template <typename T>
+T* UOverlayWidgetController::GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag)
+{
+	T* Row = DataTable->FindRow<T>(Tag.GetTagName(), TEXT(""));
+	return Row;
+}

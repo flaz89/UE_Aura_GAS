@@ -35,6 +35,7 @@ void UOverlayWidgetController::BroadcastInitialValues()
  * Step.17 - call the ASC delegate to register Mana attribute from AttributeSet, binding the callback ManaChanged
  * Step.18 - call the ASC delegate to register MaxMana attribute from AttributeSet, binding the callback MaxManaChanged
  * Step.21 - use lambda function to catch the reference list of asset tags sent from AbilitySystemComponent
+ * Step.25 - inside lambda for each tag inside the asset tags list received call the Function GetDataTableRowByTag and store it in a variable 
  */
 void UOverlayWidgetController::BindCallbacksToDependencies()
 {
@@ -53,11 +54,12 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 							.AddUObject(this, &UOverlayWidgetController::MaxManaChanged);
 	
 	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->EffectAssetTags.AddLambda(
-		[](const FGameplayTagContainer& AssetTags)
+		[this](const FGameplayTagContainer& AssetTags)
 		{
 			for (const FGameplayTag& Tag : AssetTags)
 			{
 				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Gameplay Effect: %s"), *Tag.ToString()));
+				FUIWidgetRow* Row = GetDataTableRowByTag<FUIWidgetRow>(MessageWidgetDataTable, Tag);
 			}
 		}
 	);
