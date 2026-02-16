@@ -3,6 +3,7 @@
 
 #include "UI/WidgetController/OverlayWidgetController.h"
 
+#include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 
 /* BROADCAST INITIAL VALUES()
@@ -33,6 +34,7 @@ void UOverlayWidgetController::BroadcastInitialValues()
  * Step.10 - call the ASC delegate to register MaxHealth attribute from AttributeSet, binding the callback maxHealthChanged
  * Step.17 - call the ASC delegate to register Mana attribute from AttributeSet, binding the callback ManaChanged
  * Step.18 - call the ASC delegate to register MaxMana attribute from AttributeSet, binding the callback MaxManaChanged
+ * Step.21 - use lambda function to catch the reference list of asset tags sent from AbilitySystemComponent
  */
 void UOverlayWidgetController::BindCallbacksToDependencies()
 {
@@ -49,6 +51,16 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 	
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetMaxManaAttribute())
 							.AddUObject(this, &UOverlayWidgetController::MaxManaChanged);
+	
+	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->EffectAssetTags.AddLambda(
+		[](const FGameplayTagContainer& AssetTags)
+		{
+			for (const FGameplayTag& Tag : AssetTags)
+			{
+				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Gameplay Effect: %s"), *Tag.ToString()));
+			}
+		}
+	);
 }
 
 /* HEALTH CHANGED()
@@ -71,7 +83,7 @@ void UOverlayWidgetController::MaxHealthChanged(const FOnAttributeChangeData& Da
 
 /* MANA CHANGED()
  * Step.15 - define this callback function
- * Step.18 - call OnManaChanged delegate and broadcast the new value 
+ * Step.19 - call OnManaChanged delegate and broadcast the new value 
  */
 void UOverlayWidgetController::ManaChanged(const FOnAttributeChangeData& Data) const
 {
@@ -80,7 +92,7 @@ void UOverlayWidgetController::ManaChanged(const FOnAttributeChangeData& Data) c
 
 /* MAX MANA CHANGED()
  * Step.16 - define this callback function
- * Step.19 - call OnMaxManaChanged delegate and broadcast the new value
+ * Step.20 - call OnMaxManaChanged delegate and broadcast the new value
  */
 void UOverlayWidgetController::MaxManaChanged(const FOnAttributeChangeData& Data) const
 {
