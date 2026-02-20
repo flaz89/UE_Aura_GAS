@@ -57,16 +57,60 @@ void UAuraAttributeSet::OnRep_MaxMana(const FGameplayAttributeData& OldMaxMana) 
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, MaxMana, OldMaxMana);
 }
 
+/* ONREP_STRENGTH()
+ * callback function called when attribute "Strength" get changes
+ * Step.24 - call "gameplayAttribute" macro to inform AbilitySystem about attribute replication
+ */
+void UAuraAttributeSet::OnRep_Strength(const FGameplayAttributeData& OldStrength) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Strength, OldStrength);
+}
+
+/* ONREP_INTELLIGENCE()
+ * callback function called when attribute "Intelligence" get changes
+ * Step.26 - call "gameplayAttribute" macro to inform AbilitySystem about attribute replication
+ */
+void UAuraAttributeSet::OnRep_Intelligence(const FGameplayAttributeData& OldIntelligence) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Intelligence, OldIntelligence);
+}
+
+/* ONREP_RESILIENCE()
+ * callback function called when attribute "Resilience" get changes
+ * Step.28 - call "gameplayAttribute" macro to inform AbilitySystem about attribute replication
+ */
+void UAuraAttributeSet::OnRep_Resilience(const FGameplayAttributeData& OldResilience) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Resilience, OldResilience);
+}
+
+/* ONREP_VIGOR()
+ * callback function called when attribute "Vigor" get changes
+ * Step.28 - call "gameplayAttribute" macro to inform AbilitySystem about attribute replication
+ */
+void UAuraAttributeSet::OnRep_Vigor(const FGameplayAttributeData& OldVigor) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Vigor, OldVigor);
+}
+
 /* GET LIFETIME REPLICATION PROPS()
  * called after AttributeSet construction, used to determine the place where we register variables for replication
  * Step.6 - register attribute "Health" with DOREPLIFETIME macro (class, attribute, condition, replication mode)
  * Step.7 - register attribute "MaxHealth" with DOREPLIFETIME macro (class, attribute, condition, replication mode)
  * Step.8 - register attribute "Mana" with DOREPLIFETIME macro (class, attribute, condition, replication mode)
  * Step.9 - register attribute "MaxMana" with DOREPLIFETIME macro (class, attribute, condition, replication mode)
+ * Step.25 - register attribute "Strength" with DOREPLIFETIME macro (class, attribute, condition, replication mode)
+ * Step.27 - register attribute "Intelligence" with DOREPLIFETIME macro (class, attribute, condition, replication mode)
+ * Step.27 - register attribute "Resilience" with DOREPLIFETIME macro (class, attribute, condition, replication mode)
  */
 void UAuraAttributeSet::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Strength, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Intelligence, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Resilience, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Vigor, COND_None, REPNOTIFY_Always);
 	
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Health, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, MaxHealth, COND_None, REPNOTIFY_Always);
@@ -140,6 +184,8 @@ FEffectProperties UAuraAttributeSet::SetEffectProperties(const FGameplayEffectMo
  * This function is executed after a gameplay effect change attribute
  * Step.20 - declare a struct FEffectProperties
  * Step.21 - call the function SetEffectProperties() passing in Data and Props (from here we can access to Source and Target of Effect)
+ * Step.22 - check if the data passed in is the health attribute, if so clamp appropriately Health value
+ * Step.23 - check if the data passed in is the mana attribute, if so clamp appropriately Mana value
  */
 void UAuraAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data)
 {
@@ -147,6 +193,15 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMo
 	
 	FEffectProperties Props;
 	SetEffectProperties(Data, Props);
+	
+	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
+	{
+		SetHealth(FMath::Clamp(GetHealth(), 0.f, GetMaxHealth()));
+	}
+	if (Data.EvaluatedData.Attribute == GetManaAttribute())
+	{
+		SetMana(FMath::Clamp(GetMana(), 0.f, GetMaxMana()));
+	}
 }
 
 
