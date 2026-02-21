@@ -76,6 +76,7 @@ void AAuraCharacter::OnRep_PlayerState()
  * Step.10 - get and initialize a local HUD with "AAuraHUD" type  and check it
  * Step.11 - initialize widgetController with InitOverlay() function on HUD
  * Step.14 - Cast the ASC in order to call the class function AbilityActorInfoSet();
+ * Step.15 - call InitializePrimaryAttributes()
  */
 void AAuraCharacter::InitAbilityActorInfo()
 {
@@ -94,4 +95,6 @@ void AAuraCharacter::InitAbilityActorInfo()
 			HUD->InitOverlay(PlayerController, AuraPlayerState, AbilitySystemComponent, AttributeSet );
 		}
 	}
+	
+	InitializePrimaryAttributes();
 }

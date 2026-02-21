@@ -3,6 +3,8 @@
 
 #include "Character/AuraCharacterBase.h"
 
+#include "AbilitySystemComponent.h"
+
 /*
  * Constructor:
  * Step.1 - Initialized Weapon component, attached to character socket and disable collisions
@@ -44,5 +46,23 @@ void AAuraCharacterBase::BeginPlay()
  */
 void AAuraCharacterBase::InitAbilityActorInfo()
 {
+}
+
+/* INITIALIZE PRIMARY ATTRIBUTES()
+ * called to initialize RPG primary attributes on AttributeSet
+ * Step.5 - declare and define function
+ * Step.6 - check if ASC is valid and if DataPrimaryAsset exists
+ * Step.7 - create the Context Handle from ASC using MakeEffectContext() function
+ * Step.8 - create the Spec Handle from ASC using MakeOutgoingSpec() function
+ * Step.9 - apply gameplay effect spec to ASC using ApplayGameplayEffectSpecToTarget() function
+ */
+void AAuraCharacterBase::InitializePrimaryAttributes() const
+{
+	check(IsValid(GetAbilitySystemComponent()))
+	check(DefaultPrimaryAttributes)
+	
+	const FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
+	const FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DefaultPrimaryAttributes, 1.f, ContextHandle);
+	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), GetAbilitySystemComponent());
 }
 
