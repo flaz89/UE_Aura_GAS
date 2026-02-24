@@ -86,11 +86,83 @@ void UAuraAttributeSet::OnRep_Resilience(const FGameplayAttributeData& OldResili
 
 /* ONREP_VIGOR()
  * callback function called when attribute "Vigor" get changes
- * Step.28 - call "gameplayAttribute" macro to inform AbilitySystem about attribute replication
+ * Step.30 - call "gameplayAttribute" macro to inform AbilitySystem about attribute replication
  */
 void UAuraAttributeSet::OnRep_Vigor(const FGameplayAttributeData& OldVigor) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Vigor, OldVigor);
+}
+
+/* ONREP_ARMOR()
+ * callback function called when attribute "Armor" get changes
+ * Step.32 - call "gameplayAttribute" macro to inform AbilitySystem about attribute replication
+ */
+void UAuraAttributeSet::OnRep_Armor(const FGameplayAttributeData& OldArmor) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Armor, OldArmor);
+}
+
+/* ONREP_ARMOR PENETRATION()
+ * callback function called when attribute "ArmorPenetration" get changes
+ * Step.34 - call "gameplayAttribute" macro to inform AbilitySystem about attribute replication
+ */
+void UAuraAttributeSet::OnRep_ArmorPenetration(const FGameplayAttributeData& OldArmorPenetration) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, ArmorPenetration, OldArmorPenetration);
+}
+
+/* ONREP_BLOCK CHANCE()
+ * callback function called when attribute "BlockChance" get changes
+ * Step.36 - call "gameplayAttribute" macro to inform AbilitySystem about attribute replication
+ */
+void UAuraAttributeSet::OnRep_BlockChance(const FGameplayAttributeData& OldBlockChance) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, BlockChance, OldBlockChance);
+}
+
+/* ONREP_CRITICAL HIT CHANCE()
+ * callback function called when attribute "CriticalHitChance" get changes
+ * Step.38 - call "gameplayAttribute" macro to inform AbilitySystem about attribute replication
+ */
+void UAuraAttributeSet::OnRep_CriticalHitChance(const FGameplayAttributeData& OldCriticalHitChance) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, CriticalHitChance, OldCriticalHitChance);
+}
+
+/* ONREP_CRITICAL HIT DAMAGE()
+ * callback function called when attribute "CriticalHitDamage" get changes
+ * Step.40 - call "gameplayAttribute" macro to inform AbilitySystem about attribute replication
+ */
+void UAuraAttributeSet::OnRep_CriticalHitDamage(const FGameplayAttributeData& OldCriticalHitDamage) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, CriticalHitDamage, OldCriticalHitDamage);
+}
+
+/* ONREP_CRITICAL HIT RESISTENCE()
+ * callback function called when attribute "CriticalHitResistence" get changes
+ * Step.42 - call "gameplayAttribute" macro to inform AbilitySystem about attribute replication
+ */
+void UAuraAttributeSet::OnRep_CriticalHitResistance(const FGameplayAttributeData& OldCriticalHitResistance) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Resilience, OldCriticalHitResistance);
+}
+
+/* ONREP_HEALTH REGENERATION()
+ * callback function called when attribute "HealthRegeneration" get changes
+ * Step.44 - call "gameplayAttribute" macro to inform AbilitySystem about attribute replication
+ */
+void UAuraAttributeSet::OnRep_HealthRegeneration(const FGameplayAttributeData& OldHealthRegeneration) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, HealthRegeneration, OldHealthRegeneration);
+}
+
+/* ONREP_MANA REGENERATION()
+ * callback function called when attribute "ManaRegeneration" get changes
+ * Step.46 - call "gameplayAttribute" macro to inform AbilitySystem about attribute replication
+ */
+void UAuraAttributeSet::OnRep_ManaRegeneration(const FGameplayAttributeData& OldManaRegeneration) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, ManaRegeneration, OldManaRegeneration);
 }
 
 /* GET LIFETIME REPLICATION PROPS()
@@ -101,7 +173,16 @@ void UAuraAttributeSet::OnRep_Vigor(const FGameplayAttributeData& OldVigor) cons
  * Step.9 - register attribute "MaxMana" with DOREPLIFETIME macro (class, attribute, condition, replication mode)
  * Step.25 - register attribute "Strength" with DOREPLIFETIME macro (class, attribute, condition, replication mode)
  * Step.27 - register attribute "Intelligence" with DOREPLIFETIME macro (class, attribute, condition, replication mode)
- * Step.27 - register attribute "Resilience" with DOREPLIFETIME macro (class, attribute, condition, replication mode)
+ * Step.29 - register attribute "Resilience" with DOREPLIFETIME macro (class, attribute, condition, replication mode)
+ * Step.31 - register attribute "Vigor" with DOREPLIFETIME macro (class, attribute, condition, replication mode)
+ * Step.33 - register attribute "Armor" with DOREPLIFETIME macro (class, attribute, condition, replication mode)
+ * Step.35 - register attribute "ArmorPenetration" with DOREPLIFETIME macro (class, attribute, condition, replication mode)
+ * Step.37 - register attribute "BlockChance" with DOREPLIFETIME macro (class, attribute, condition, replication mode)
+ * Step.39 - register attribute "CriticalHitChance" with DOREPLIFETIME macro (class, attribute, condition, replication mode)
+ * Step.41 - register attribute "CriticalHitDamage" with DOREPLIFETIME macro (class, attribute, condition, replication mode)
+ * Step.43 - register attribute "CriticalHitResistence" with DOREPLIFETIME macro (class, attribute, condition, replication mode)
+ * Step.45 - register attribute "HealthRegeneration" with DOREPLIFETIME macro (class, attribute, condition, replication mode)
+ * Step.47 - register attribute "ManaRegeneration" with DOREPLIFETIME macro (class, attribute, condition, replication mode)
  */
 void UAuraAttributeSet::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
 {
@@ -112,10 +193,20 @@ void UAuraAttributeSet::GetLifetimeReplicatedProps(TArray<class FLifetimePropert
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Resilience, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Vigor, COND_None, REPNOTIFY_Always);
 	
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Armor, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, ArmorPenetration, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, BlockChance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, CriticalHitChance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, CriticalHitDamage, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, CriticalHitResistance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, HealthRegeneration, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, ManaRegeneration, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Health, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, MaxHealth, COND_None, REPNOTIFY_Always);
+	
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Mana, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, MaxMana, COND_None, REPNOTIFY_Always);
+	
 }
 
 /* PRE ATTRIBUTE CHANGE()
